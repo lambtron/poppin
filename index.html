@@ -1,0 +1,67 @@
+<!-- index.html -->
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <!-- META -->
+  <meta charset="utf-8">
+
+  <title>Poppin'</title>
+
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="/favicon.png">
+
+  <!-- SCROLLS -->
+  <link rel="stylesheet" href="index.css">
+  <!-- load bootstrap -->
+
+  <!-- SPELLS -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLzQ9P1X5Belf1E0V_F5cfDFA7j_EQjAk"></script>
+</head>
+
+
+<body>
+  <div id="map-canvas"></div>
+</body>
+
+<script type="text/javascript">
+  // var infowindow = null;
+
+  function initialize(position) {
+    var mapOptions = {
+      center: new google.maps.LatLng(position.coords.latitude,
+        position.coords.longitude),
+      zoom: 13
+    };
+    var map = new google.maps.Map(document.getElementById("map-canvas"),
+      mapOptions);
+
+    // Add your location.
+    var you = new google.maps.Marker({
+      position: new google.maps.LatLng(position.coords.latitude,
+        position.coords.longitude),
+      map: map,
+      title: 'You',
+      animation: google.maps.Animation.DROP
+    });
+
+    // CAFES is an array of objects:
+    // .name
+    // .latlng
+    // .description 
+
+    // Add venues here.
+  }
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(initialize);
+    } else {
+      var x = document.getElementById("map-canvas");
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+
+  google.maps.event.addDomListener(window, 'load', getLocation);
+</script>
+</html>
