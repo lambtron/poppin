@@ -1,1 +1,1 @@
-web: static -p PORT
+web: static -p $PORT
