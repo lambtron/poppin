@@ -18,6 +18,7 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLzQ9P1X5Belf1E0V_F5cfDFA7j_EQjAk"></script>
+  <script type="text/javascript" src="/markerwithlabel.js"></script>
 </head>
 
 
@@ -55,8 +56,6 @@
       var venues = data.response.venues;
       var maxCount = _.max(venues, function(venue){ return venue.hereNow.count; }).hereNow.count;
 
-      console.log(maxCount);
-
       venues.map(function(venue) {
         if (venue.hereNow.count == 0) return;
         var latlng = new google.maps.LatLng(venue.location.lat, venue.location.lng);
@@ -70,11 +69,13 @@
           rotation: 135
         };
 
-        var marker = new google.maps.Marker({
+        var marker = new MarkerWithLabel({
           position: latlng,
           map: map,
           icon: icon,
-          title: venue.name + ': ' + venue.hereNow.count
+          labelContent: "test" + venue.hereNow.count,
+          labelAnchor: new google.maps.Point(3, 30),
+          labelInBackground: false
         });
       });
     });
