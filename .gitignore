@@ -28,4 +28,4 @@ node_modules
 .lock-wscript
 
 # Configuration files
-./config
+./config/*
