@@ -9,13 +9,13 @@
   <title>Poppin'</title>
 
   <!-- FAVICON -->
-  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="shortcut icon" href="favicon.png">
 
   <!-- SCROLLS -->
   <link rel="stylesheet" href="index.css">
-  <!-- load bootstrap -->
 
   <!-- SPELLS -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLzQ9P1X5Belf1E0V_F5cfDFA7j_EQjAk"></script>
 </head>
 
@@ -26,12 +26,16 @@
 
 <script type="text/javascript">
   // var infowindow = null;
+  var client_id = "ZRROZXGUWWQV35ADWBBZJD1KWZDLJKVV2BDYVY1SDCNI1ZUY";
+  var client_secret = "0ASJ5BFV3J032HOZQS5S5K1XRM2IWQ5XY51YRCMH1NFZUDHF";
+  var api_date = "20141101";
 
   function initialize(position) {
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
     var mapOptions = {
-      center: new google.maps.LatLng(position.coords.latitude,
-        position.coords.longitude),
-      zoom: 13
+      center: new google.maps.LatLng(lat, lng),
+      zoom: 20
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"),
       mapOptions);
@@ -45,12 +49,57 @@
       animation: google.maps.Animation.DROP
     });
 
-    // CAFES is an array of objects:
-    // .name
-    // .latlng
-    // .description 
+    getTrending(lat, lng, function(data) {
+      // Add venues to map.
+      var venues = data.response.venues;
 
+      venues.map(function(venue) {
+        var latlng = new google.maps.LatLng(venue.location.lat, venue.location.lng);
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map,
+          title: venue.name + ': ' + venue.hereNow.count
+        })
+      });
+
+      // for (var i = 0; i < venues.length; i++) {
+      //   (function() {
+      //     var contentString = '<div id="infowindow">' +
+      //       '<h4>' + CAFES[i].name + '</h4>' +
+      //       '<p>' + CAFES[i].description + '</p>' +
+      //       '</div>';
+
+      //     var marker = new google.maps.Marker({
+      //       position: CAFES[i].latlng,
+      //       map: map,
+      //       title: CAFES[i].name
+      //     });
+
+      //     google.maps.event.addListener(marker, 'click', function() {
+      //       if (infowindow) {
+      //         infowindow.close();
+      //       }
+      //       infowindow = new google.maps.InfoWindow({
+      //         content: contentString
+      //       });
+      //       infowindow.open(map, marker);
+      //     });
+      //   })(i);
+      // }
+
+    });
+  }
+
+  function getTrending(lat, lng, cb) {
     // Add venues here.
+    var domain = "https://api.foursquare.com/v2/venues"
+    var path = "/search?ll="
+             + lat + "," + lng
+             + "&client_id=" + client_id
+             + "&client_secret=" + client_secret
+             + "&v=" + api_date;
+
+    $.get(domain + path, cb);
   }
 
   function getLocation() {
